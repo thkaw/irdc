@@ -1,0 +1,188 @@
+<title>NTL IRDC v1</title>
+
+<head>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=1"
+  />
+
+  <script
+    script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    var magic_value = "";
+    var api_port = "54321";
+    var api_ip = "";
+    var final_api_url = "";
+
+    window.onload = onloadFunction;
+    function onloadFunction() {
+      console.warn("qq onload");
+      getLocationInfo();
+    }
+
+    function getLocationInfo() {
+      var url = new URL(location.href);
+
+      if (url.href.indexOf("?") != -1) {
+        const {
+          href,
+          protocol,
+          hostname,
+          pathname,
+          search,
+          searchParams,
+        } = url;
+        api_ip = hostname;
+        final_api_url = "http://" + api_ip + ":" + api_port;
+        // alert(final_api_url);
+        for (let [key, value] of searchParams.entries()) {
+          // console.log(`key: ${key}, value: ${value}`)
+          if (key == "magic") {
+            magic_value = value;
+          }
+          if (key == "do") {
+            switch (value) {
+              case "up":
+                up();
+                break;
+              case "stop":
+                stop();
+                break;
+              case "down":
+                down();
+                break;
+              case "packagemode":
+                packageMode();
+                break;
+              case "on":
+                On();
+                break;
+              case "off":
+                Off();
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      }
+    }
+    function On() {
+      $.ajax({
+        method: "POST",
+        url: final_api_url + "/api/v1.0/turnOnOffLED",
+        data: { value: "on", magic: magic_value },
+      }).done(function (msg) {
+        alert("Set: " + msg);
+      });
+    }
+    function Off() {
+      $.ajax({
+        method: "POST",
+        url: final_api_url + "/api/v1.0/turnOnOffLED",
+        data: { value: "off", magic: magic_value },
+      }).done(function (msg) {
+        alert("Set: " + msg);
+      });
+    }
+
+    function up() {
+      $.ajax({
+        method: "POST",
+        url: final_api_url + "/api/v1.0/IRDC/up",
+        data: { value: "on", magic: magic_value },
+      }).done(function (msg) {
+        //   alert( "Set: " + msg );
+      });
+    }
+
+    function stop() {
+      $.ajax({
+        method: "POST",
+        url: final_api_url + "/api/v1.0/IRDC/stop",
+        data: { value: "on", magic: magic_value },
+      }).done(function (msg) {
+        //  alert( "Set: " + msg );
+      });
+    }
+
+    function down() {
+      $.ajax({
+        method: "POST",
+        url: final_api_url + "/api/v1.0/IRDC/down",
+        data: { value: "on", magic: magic_value },
+      }).done(function (msg) {
+        //   alert( "Set: " + msg );
+      });
+    }
+
+    function packageMode() {
+      $.ajax({
+        method: "POST",
+        url: final_api_url + "/api/v1.0/IRDC/package_mode",
+        data: { value: "on", magic: magic_value },
+      }).done(function (msg) {
+        //   alert( "Set: " + msg );
+      });
+    }
+
+    function playground() {
+      alert("magic_value:" + magic_value);
+    }
+  </script>
+</head>
+
+<body style="overflow: hidden">
+  <style>
+    .block {
+      display: block;
+      width: 100%;
+      height: 15%;
+      border: none;
+      background-color: #4f60ff;
+      padding: 14px 28px;
+      font-size: 36px;
+      cursor: pointer;
+      text-align: center;
+    }
+  </style>
+
+  <div id="content">
+    <button onclick="up()" class="block" style="background-color: #f3cd21">
+      Up
+    </button>
+    <p></p>
+    <button onclick="stop()" class="block" style="background-color: #4caf50">
+      Stop
+    </button>
+    <p></p>
+    <button onclick="down()" class="block" style="background-color: #ca2f2f">
+      Down
+    </button>
+    <p></p>
+    <button
+      onclick="packageMode()"
+      class="block"
+      style="background-color: #c7e039"
+    >
+      PacakgeOpen
+    </button>
+    <p></p>
+    <button onclick="On()" class="block" style="background-color: #a1cca3">
+      OnAC
+    </button>
+    <p></p>
+    <button onclick="Off()" class="block" style="background-color: #314131">
+      OffAC
+    </button>
+    <p></p>
+    <button onclick="playground()" class="block">test</button>
+    <!-- <div>
+        <label for="magic">magic:</label>
+        <input type="password" id="magic" name="magic" autocomplete="current-password" required >
+    </div> -->
+  </div>
+</body>
